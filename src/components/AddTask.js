@@ -2,22 +2,82 @@ import React, { useState, useContext } from 'react'
 import axios from 'axios'
 import { navigate } from 'gatsby'
 import Context from 'components/common/Context'
-import SEO from 'components/common/Seo'
+const qs = require('querystring')
 
 export default () => {
   const { dispatch } = useContext(Context)
-  const [task, setTask] = useState('')
+
   const [isSubmitting, setSubmitting] = useState(false)
-  const [error, setError] = useState(null)
+
+  const [name, setName] = useState('')
+  const [nameError, setNameError] = useState(false)
+
+  const [score, setScore] = useState(0)
+  const [scoreError, setScoreError] = useState(false)
+
+  const [director, setDirector] = useState('')
+  const [directorError, setDirectorError] = useState(false)
+
+  const [releaseDate, setReleaseDate] = useState('')
+  const [releaseDateError, setReleaseDateError] = useState(false)
+
+  const [plotDescription, setPlotDescription] = useState('')
+  const [plotDescriptionError, setPlotDescriptionError] = useState(false)
 
   const handleChange = e => {
-    setTask(e.target.value)
+    const value = e.target.value
+    switch (e.target.name) {
+      case 'name':
+        setName(value)
+        break;
+
+      case 'release_date':
+        setReleaseDate(value)
+        break;
+
+      case 'score':
+        setScore(value)
+        break;
+
+      case 'director':
+        setDirector(value)
+        break;
+
+      case 'plot':
+        setPlotDescription(value)
+        break;
+
+      default:
+        break;
+    }
+    setSubmitting(false)
   }
 
-  const handleBlur = e => {
-    if (!e.target.value) {
-      setError('Insert a task!')
+  const checkErrors = () => {
+    let cleanOfError = true
+
+    if (!name) {
+      setNameError(true)
+      cleanOfError = false
     }
+    if (!releaseDate) {
+      setReleaseDateError(true)
+      cleanOfError = false
+    }
+    if (!score) {
+      setScoreError(true)
+      cleanOfError = false
+    }
+    if (!director) {
+      setDirectorError(true)
+      cleanOfError = false
+    }
+    if (!plotDescription) {
+      setPlotDescriptionError(true)
+      cleanOfError = false
+    }
+
+    return cleanOfError
   }
 
   const handleSubmit = async e => {
@@ -25,37 +85,87 @@ export default () => {
     setSubmitting(true)
 
     try {
-      if (!task) {
-        setError('Field is required')
-      } else {
-        const { data } = await axios.post(`${process.env.API}/post/`, {
-          title: task,
-        })
+      if (checkErrors()) {
+        const token = window.localStorage.getItem('token')
+        const requestBody = {
+          name: name,
+          released_date: releaseDate,
+          director: director,
+          score: score,
+          plot_description: plotDescription
+        }
+        const config = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'x-access-token': token,
+          }
+        }
+        const { data } = await axios.post(
+                                           `${process.env.API}/movies`,
+                                            qs.stringify(requestBody),
+                                            config
+                                          )
+
         dispatch({ type: 'Add_NEW_TASK', payload: data })
         navigate('/app/tasks/')
         setSubmitting(false)
       }
     } catch (err) {
-      setError(err.response.data)
       setSubmitting(false)
     }
   }
 
   return (
     <>
-      <SEO title="Tasks" />
       <div className="container">
         <form onSubmit={handleSubmit}>
           <div className="input-field black-input">
-            <span className="task-icon" />
             <input
               onChange={handleChange}
-              onBlur={handleBlur}
               type="text"
-              placeholder="Enter your task"
-              name="task"
+              placeholder="Film Name"
+              name="name"
             />
-            {error && <span style={{ color: 'red' }}>{error}</span>}
+            {nameError && <span style={{ color: 'red' }}>{'Name is required'}</span>}
+          </div>
+          <div className="input-field black-input">
+            <input
+              onChange={handleChange}
+              type="date"
+              placeholder="Release Date"
+              name="release_date"
+            />
+            {releaseDateError && <span style={{ color: 'red' }}>{'Release date is required'}</span>}
+          </div>
+          <div className="input-field black-input">
+            <input
+              onChange={handleChange}
+              type="director"
+              placeholder="Director"
+              name="director"
+            />
+            {directorError && <span style={{ color: 'red' }}>{'Director is required'}</span>}
+          </div>
+          <div className="input-field black-input">
+            <input
+              onChange={handleChange}
+              type="number"
+              placeholder="Score"
+              name="score"
+              min="0"
+              max="10"
+              step="0.5"
+            />
+            {scoreError && <span style={{ color: 'red' }}>{'Score is required'}</span>}
+          </div>
+          <div className="input-field black-input">
+            <input
+              onChange={handleChange}
+              type="text"
+              placeholder="Plot description"
+              name="plot"
+            />
+            {plotDescriptionError && <span style={{ color: 'red' }}>{'Plot Description is required'}</span>}
           </div>
           <button
             type="submit"

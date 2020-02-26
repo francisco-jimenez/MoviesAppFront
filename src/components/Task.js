@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { navigate } from 'gatsby'
 import axios from 'axios'
 import Context from 'components/common/Context'
-import SEO from 'components/common/Seo'
 
 export default ({ id }) => {
   const { tasks, dispatch } = useContext(Context)
@@ -21,7 +20,7 @@ export default ({ id }) => {
         `${process.env.API}/movies/?movieId=${id}`,
          config
        )
-      dispatch({ type: 'GET_DATA_BY_ID', payload: data })
+      dispatch({ type: 'GET_DATA_BY_ID', payload: data.data.movies[0] })
       setLoading(false)
     } catch (err) {
       navigate('/404/')
@@ -62,15 +61,12 @@ export default ({ id }) => {
 
   return (
     <>
-      <SEO title={loading ? 'Loading...' : tasks.title} />
       {loading ? (
         <span>Loading...</span>
       ) : (
         <div className="container">
-          <h1
-            style={{ textDecoration: tasks.isDone ? 'line-through' : 'unset' }}
-          >
-            {tasks.title}
+          <h1>
+            {tasks.name}
           </h1>
           <button type="button" disabled={isSubmitting} onClick={setDone}>
             Set to Done

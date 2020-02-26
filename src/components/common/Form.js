@@ -60,7 +60,7 @@ export default ({ form }) => {
                                               qs.stringify(requestBody),
                                               config
                                             )
-          debugger
+          
           if(data.data && data.data.token && data.status !== 'error'){
             await setAuthToken(data.data.token)
             dispatchUserAction({ type: 'SAVE_USER', payload: data.data.user })

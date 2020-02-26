@@ -36,7 +36,7 @@ export default () => {
   return (
     <>
       <div className="container">
-        <h1>Tasks</h1>
+        <h1>Movies</h1>
         {loading ? (
           <TasksLoading />
         ) : (
@@ -47,7 +47,7 @@ export default () => {
                 {tasks.map(({ name, id }) => (
                   <li key={id}>
                     <Link
-                      to={`/app/task/`}
+                      to={`/app/task/${id}`}
                     >
                       {name}
                     </Link>
