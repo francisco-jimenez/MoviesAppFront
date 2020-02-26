@@ -1,13 +1,16 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { navigate } from 'gatsby'
 import Context from 'components/common/Context'
 const qs = require('querystring')
 
-export default () => {
+export default ({ id }) => {
   const { dispatch } = useContext(Context)
 
   const [isSubmitting, setSubmitting] = useState(false)
+
+  let movieId = id
+  console.log(movieId)
 
   const [name, setName] = useState('')
   const [nameError, setNameError] = useState(false)
@@ -52,6 +55,35 @@ export default () => {
     }
     setSubmitting(false)
   }
+
+  const fetchTask = async () => {
+    if (movieId) {
+      try {
+        const token = window.localStorage.getItem('token')
+        const config = {
+          headers: {
+            'x-access-token': token,
+          }
+        }
+        const { data } = await axios.get(
+          `${process.env.API}/movies/${movieId}`,
+          config
+        )
+        let fetchMovie = data.data.movies
+        setName(fetchMovie.name)
+        setReleaseDate(fetchMovie.release_date)
+        setDirector(fetchMovie.director)
+        setScore(fetchMovie.score)
+        setPlotDescription(fetchMovie.plot_description)
+      } catch (err) {
+        // navigate('/404/')
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchTask()
+  }, [])
 
   const checkErrors = () => {
     let cleanOfError = true
@@ -101,10 +133,10 @@ export default () => {
           }
         }
         const { data } = await axios.post(
-                                           `${process.env.API}/movies`,
-                                            qs.stringify(requestBody),
-                                            config
-                                          )
+          `${process.env.API}/movies`,
+          qs.stringify(requestBody),
+          config
+        )
 
         dispatch({ type: 'Add_NEW_TASK', payload: data })
         navigate('/app/tasks/')
@@ -125,6 +157,7 @@ export default () => {
               type="text"
               placeholder="Film Name"
               name="name"
+              value ={name}
             />
             {nameError && <span style={{ color: 'red' }}>{'Name is required'}</span>}
           </div>
@@ -134,6 +167,7 @@ export default () => {
               type="date"
               placeholder="Release Date"
               name="release_date"
+              value ={releaseDate}
             />
             {releaseDateError && <span style={{ color: 'red' }}>{'Release date is required'}</span>}
           </div>
@@ -143,6 +177,7 @@ export default () => {
               type="director"
               placeholder="Director"
               name="director"
+              value ={director}
             />
             {directorError && <span style={{ color: 'red' }}>{'Director is required'}</span>}
           </div>
@@ -155,6 +190,7 @@ export default () => {
               min="0"
               max="10"
               step="0.5"
+              value ={score}
             />
             {scoreError && <span style={{ color: 'red' }}>{'Score is required'}</span>}
           </div>
@@ -164,6 +200,7 @@ export default () => {
               type="text"
               placeholder="Plot description"
               name="plot"
+              value ={plotDescription}
             />
             {plotDescriptionError && <span style={{ color: 'red' }}>{'Plot Description is required'}</span>}
           </div>

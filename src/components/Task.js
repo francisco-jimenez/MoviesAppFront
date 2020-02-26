@@ -4,9 +4,10 @@ import axios from 'axios'
 import Context from 'components/common/Context'
 
 export default ({ id }) => {
-  const { tasks, dispatch } = useContext(Context)
+  const { selectedTask, dispatch } = useContext(Context)
   const [loading, setLoading] = useState(true)
   const [isSubmitting, setSubmitting] = useState(false)
+  console.log('paramId',id)
 
   const fetchTask = async () => {
     try {
@@ -17,9 +18,10 @@ export default ({ id }) => {
         }
       }
       const { data } = await axios.get(
-        `${process.env.API}/movies/?movieId=${id}`,
+        `${process.env.API}/movies/${id}`,
          config
        )
+       console.log(data.data.movies[0])
       dispatch({ type: 'GET_DATA_BY_ID', payload: data.data.movies[0] })
       setLoading(false)
     } catch (err) {
@@ -27,25 +29,10 @@ export default ({ id }) => {
     }
   }
 
-  const setDone = async () => {
-    try {
-      setSubmitting(true)
-      await axios.patch(`${process.env.API}/post/${id}`, {
-        isDone: !tasks.isDone,
-      })
-      navigate('/app/tasks/')
-      setSubmitting(false)
-    } catch (error) {
-      // TODO: use react-toastify
-      alert('something went wrong')
-      setSubmitting(false)
-    }
-  }
-
   const deleteTask = async () => {
     try {
       setSubmitting(true)
-      await axios.delete(`${process.env.API}/post/${id}`)
+      await axios.delete(`${process.env.API}/${id}`)
       navigate('/app/tasks/')
       setSubmitting(false)
     } catch (error) {
@@ -66,11 +53,8 @@ export default ({ id }) => {
       ) : (
         <div className="container">
           <h1>
-            {tasks.name}
+            {selectedTask}
           </h1>
-          <button type="button" disabled={isSubmitting} onClick={setDone}>
-            Set to Done
-          </button>
           <button type="button" disabled={isSubmitting} onClick={deleteTask}>
             Delete
           </button>
