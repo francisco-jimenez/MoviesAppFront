@@ -6,7 +6,7 @@ import MoviesLoading from './common/MoviesLoading'
 
 export default () => {
   const [loading, setLoading] = useState(true)
-  const { tasks, dispatch } = useContext(Context)
+  const { movies, dispatch } = useContext(Context)
 
   const fetchMovies = async () => {
     try {
@@ -17,11 +17,11 @@ export default () => {
         }
       }
       const { data } = await axios.get(
-        `${process.env.API}/movies`,
+        `${process.env.API}movies`,
          config
        )
 
-      await dispatch({ type: 'FETCH_TASKS', payload: data.data.movies })
+      await dispatch({ type: 'FETCH_MOVIES', payload: data.data.movies })
       setLoading(false)
     } catch (err) {
       setLoading(false)
@@ -40,13 +40,13 @@ export default () => {
           <MoviesLoading />
         ) : (
           <>
-            {console.log(tasks)}
-            {tasks && (
+            {console.log(movies)}
+            {movies && (
               <ul>
-                {tasks.map(({ name, id }) => (
+                {movies.map(({ name, id }) => (
                   <li key={id}>
                     <Link
-                      to={`/app/task/${id}`}
+                      to={`/app/movie/${id}`}
                     >
                       {name}
                     </Link>
@@ -54,7 +54,7 @@ export default () => {
                 ))}
               </ul>
             )}
-            <Link to="/app/task/new/">New Movie</Link>
+            <Link to="/app/movie/new/">New Movie</Link>
           </>
         )}
       </div>
