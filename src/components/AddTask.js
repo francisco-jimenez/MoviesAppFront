@@ -29,6 +29,10 @@ export default ({ id }) => {
   const [plotDescription, setPlotDescription] = useState('')
   const [plotDescriptionError, setPlotDescriptionError] = useState(false)
 
+  useEffect(() => {
+    fetchTask()
+  }, [])
+
   const handleChange = e => {
     const value = e.target.value
     switch (e.target.name) {
@@ -75,7 +79,8 @@ export default ({ id }) => {
         let fetchMovie = data.data.movies
         console.log(fetchMovie)
         setName(fetchMovie.name)
-        setReleaseDate(moment(fetchMovie.release_date).format('YYYY-MM-DD'))
+        debugger
+        setReleaseDate(fetchMovie.released_date)
         setDirector(fetchMovie.director)
         setScore(fetchMovie.score)
         setPlotDescription(fetchMovie.plot_description)
@@ -85,10 +90,6 @@ export default ({ id }) => {
       }
     }
   }
-
-  useEffect(() => {
-    fetchTask()
-  }, [])
 
   const checkErrors = () => {
     let cleanOfError = true
@@ -135,6 +136,36 @@ export default ({ id }) => {
     }
   }
 
+  const updateMovie = async () => {
+    try {
+      const token = window.localStorage.getItem('token')
+      const requestBody = {
+        name: name,
+        released_date: releaseDate,
+        director: director,
+        score: score,
+        plot_description: plotDescription
+      }
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-access-token': token,
+        }
+      }
+      setSubmitting(true)
+      await axios.put(
+        `${process.env.API}/movies/${movieId}`,
+        qs.stringify(requestBody),
+        config
+      )
+      navigate('/app/tasks/')
+      setSubmitting(false)
+    } catch (error) {
+      alert('something went wrong')
+      setSubmitting(false)
+    }
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
     setSubmitting(true)
@@ -173,7 +204,7 @@ export default ({ id }) => {
   return (
     <>
       <div className="container">
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
           <div className="input-field black-input">
             <input
               onChange={handleChange}
@@ -190,7 +221,7 @@ export default ({ id }) => {
               type="date"
               placeholder="Release Date"
               name="release_date"
-              value={releaseDate}
+              value={moment(releaseDate).format('YYYY-MM-DD')}
             />
             {releaseDateError && <span style={{ color: 'red' }}>{'Release date is required'}</span>}
           </div>
@@ -229,7 +260,7 @@ export default ({ id }) => {
           </div>
           {!movieId &&
             <button
-              type="submit"
+              onClick={handleSubmit}
               className="btn btn-rounded gradient-green"
               disabled={isSubmitting}
             >
@@ -239,7 +270,7 @@ export default ({ id }) => {
           {movieId &&
             <>
               <button
-                type="submit"
+                onClick={updateMovie}
                 className="btn btn-rounded gradient-green"
                 disabled={!isEditing}
               >
@@ -254,7 +285,7 @@ export default ({ id }) => {
               </button>
             </>
           }
-        </form>
+        {/* </form> */}
       </div>
     </>
   )

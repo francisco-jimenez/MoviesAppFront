@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'gatsby'
 import Context from 'components/common/Context'
-import SEO from 'components/common/Seo'
 import TasksLoading from './common/TasksLoading'
 
 export default () => {
