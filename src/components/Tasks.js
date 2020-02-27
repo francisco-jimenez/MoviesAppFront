@@ -55,7 +55,7 @@ export default () => {
                 ))}
               </ul>
             )}
-            <Link to="/app/task/new/">Add new Task</Link>
+            <Link to="/app/task/new/">New Movie</Link>
           </>
         )}
       </div>

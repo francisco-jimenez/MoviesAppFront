@@ -2,12 +2,14 @@ import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { navigate } from 'gatsby'
 import Context from 'components/common/Context'
+const moment = require('moment');
 const qs = require('querystring')
 
 export default ({ id }) => {
   const { dispatch } = useContext(Context)
 
   const [isSubmitting, setSubmitting] = useState(false)
+  const [isEditing, setEditing] = useState(false)
 
   let movieId = id
   console.log(movieId)
@@ -21,7 +23,7 @@ export default ({ id }) => {
   const [director, setDirector] = useState('')
   const [directorError, setDirectorError] = useState(false)
 
-  const [releaseDate, setReleaseDate] = useState('')
+  const [releaseDate, setReleaseDate] = useState(new Date())
   const [releaseDateError, setReleaseDateError] = useState(false)
 
   const [plotDescription, setPlotDescription] = useState('')
@@ -54,6 +56,7 @@ export default ({ id }) => {
         break;
     }
     setSubmitting(false)
+    setEditing(true)
   }
 
   const fetchTask = async () => {
@@ -70,13 +73,15 @@ export default ({ id }) => {
           config
         )
         let fetchMovie = data.data.movies
+        console.log(fetchMovie)
         setName(fetchMovie.name)
-        setReleaseDate(fetchMovie.release_date)
+        setReleaseDate(moment(fetchMovie.release_date).format('YYYY-MM-DD'))
         setDirector(fetchMovie.director)
         setScore(fetchMovie.score)
         setPlotDescription(fetchMovie.plot_description)
+        setEditing(false)
       } catch (err) {
-        // navigate('/404/')
+        navigate('/404/')
       }
     }
   }
@@ -157,7 +162,7 @@ export default ({ id }) => {
               type="text"
               placeholder="Film Name"
               name="name"
-              value ={name}
+              value={name}
             />
             {nameError && <span style={{ color: 'red' }}>{'Name is required'}</span>}
           </div>
@@ -167,7 +172,7 @@ export default ({ id }) => {
               type="date"
               placeholder="Release Date"
               name="release_date"
-              value ={releaseDate}
+              value={releaseDate}
             />
             {releaseDateError && <span style={{ color: 'red' }}>{'Release date is required'}</span>}
           </div>
@@ -177,7 +182,7 @@ export default ({ id }) => {
               type="director"
               placeholder="Director"
               name="director"
-              value ={director}
+              value={director}
             />
             {directorError && <span style={{ color: 'red' }}>{'Director is required'}</span>}
           </div>
@@ -190,7 +195,7 @@ export default ({ id }) => {
               min="0"
               max="10"
               step="0.5"
-              value ={score}
+              value={score}
             />
             {scoreError && <span style={{ color: 'red' }}>{'Score is required'}</span>}
           </div>
@@ -200,17 +205,28 @@ export default ({ id }) => {
               type="text"
               placeholder="Plot description"
               name="plot"
-              value ={plotDescription}
+              value={plotDescription}
             />
             {plotDescriptionError && <span style={{ color: 'red' }}>{'Plot Description is required'}</span>}
           </div>
-          <button
-            type="submit"
-            className="btn btn-rounded gradient-green"
-            disabled={isSubmitting}
-          >
-            Submit
+          {!movieId &&
+            <button
+              type="submit"
+              className="btn btn-rounded gradient-green"
+              disabled={isSubmitting}
+            >
+              Submit
           </button>
+          }
+          {movieId &&
+            <button
+              type="submit"
+              className="btn btn-rounded gradient-green"
+              disabled={isEditing}
+            >
+              Save changes
+          </button>
+          }
         </form>
       </div>
     </>
