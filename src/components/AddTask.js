@@ -117,6 +117,24 @@ export default ({ id }) => {
     return cleanOfError
   }
 
+  const deleteTask = async () => {
+    try {
+      const token = window.localStorage.getItem('token')
+      const config = {
+        headers: {
+          'x-access-token': token,
+        }
+      }
+      setSubmitting(true)
+      await axios.delete(`${process.env.API}/movies/${movieId}`,config)
+      navigate('/app/tasks/')
+      setSubmitting(false)
+    } catch (error) {
+      alert('something went wrong')
+      setSubmitting(false)
+    }
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
     setSubmitting(true)
@@ -219,13 +237,22 @@ export default ({ id }) => {
           </button>
           }
           {movieId &&
-            <button
-              type="submit"
-              className="btn btn-rounded gradient-green"
-              disabled={isEditing}
-            >
-              Save changes
-          </button>
+            <>
+              <button
+                type="submit"
+                className="btn btn-rounded gradient-green"
+                disabled={!isEditing}
+              >
+                Save changes
+              </button>
+              <button 
+                type="button" 
+                disabled={isSubmitting} 
+                onClick={deleteTask}
+              >
+                Delete
+              </button>
+            </>
           }
         </form>
       </div>
