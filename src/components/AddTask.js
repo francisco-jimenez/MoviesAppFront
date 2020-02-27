@@ -23,7 +23,7 @@ export default ({ id }) => {
   const [director, setDirector] = useState('')
   const [directorError, setDirectorError] = useState(false)
 
-  const [releaseDate, setReleaseDate] = useState(new Date())
+  const [releaseDate, setReleaseDate] = useState(null)
   const [releaseDateError, setReleaseDateError] = useState(false)
 
   const [plotDescription, setPlotDescription] = useState('')
@@ -79,7 +79,6 @@ export default ({ id }) => {
         let fetchMovie = data.data.movies
         console.log(fetchMovie)
         setName(fetchMovie.name)
-        debugger
         setReleaseDate(fetchMovie.released_date)
         setDirector(fetchMovie.director)
         setScore(fetchMovie.score)
@@ -102,7 +101,7 @@ export default ({ id }) => {
       setReleaseDateError(true)
       cleanOfError = false
     }
-    if (!score) {
+    if (!score && score !== 0) {
       setScoreError(true)
       cleanOfError = false
     }
@@ -204,6 +203,12 @@ export default ({ id }) => {
   return (
     <>
       <div className="container">
+        <button
+              className="btn btn-rounded gradient-green"
+                onClick={() => navigate('/app/tasks/')}
+              >
+                Back
+        </button>
         {/* <form onSubmit={handleSubmit}> */}
           <div className="input-field black-input">
             <input
