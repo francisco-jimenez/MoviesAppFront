@@ -7,6 +7,7 @@ import MoviesLoading from './common/MoviesLoading'
 export default () => {
   const [loading, setLoading] = useState(true)
   const { movies, dispatch } = useContext(Context)
+  const { user, dispatchUserAction } = useContext(Context)
 
   const fetchMovies = async () => {
     try {
@@ -35,12 +36,12 @@ export default () => {
   return (
     <>
       <div className="container">
-        <h1>Movies</h1>
+        <h4>Hi, {user.data.name}</h4>
+        <h2>Movies list</h2>
         {loading ? (
           <MoviesLoading />
         ) : (
           <>
-            {console.log(movies)}
             {movies && (
               <ul>
                 {movies.map(({ name, id }) => (

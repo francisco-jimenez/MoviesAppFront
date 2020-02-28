@@ -14,7 +14,7 @@ export default ({ children }) => {
       const token = window.localStorage.getItem('token')
       if (token) {
         const { data } = await axios({
-          method: 'GET',
+          method: 'POST',
           url: `${process.env.API}/users/authenticate`,
           headers: {
             'Content-Type': 'application/json',
@@ -26,16 +26,6 @@ export default ({ children }) => {
         dispatchUserAction({ type: 'SAVE_USER', payload: data.data.user })
         window.localStorage.setItem('token', data.token)
 
-        if (
-          window.location.pathname === '/app/login' ||
-          window.location.pathname === '/app/register' ||
-          window.location.pathname === '/app' ||
-          window.location.pathname === '/app/login/' ||
-          window.location.pathname === '/app/register/' ||
-          window.location.pathname === '/app/'
-        ) {
-          navigate('/app/movies/')
-        }
         setLoading(false)
       } else {
         if (
@@ -74,7 +64,7 @@ export default ({ children }) => {
       {loading ? (
         <span>Loading...</span>
       ) : (
-        <Layout logout={logout}>
+        <Layout isLoggedIn={user.isLoggedIn} logout={logout}>
           {children}
         </Layout>
       )}
