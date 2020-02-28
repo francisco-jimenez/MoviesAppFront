@@ -113,7 +113,7 @@ export default ({ id }) => {
   const deleteMovie = async () => {
     try {
       setSubmitting(true)
-      await axios.delete(`${process.env.API}/movies/${movieId}`,config)
+      await axios.delete(`${process.env.API}/movies/${movieId}`)
       navigate('/app/movies/')
       setSubmitting(false)
     } catch (error) {
@@ -157,7 +157,6 @@ export default ({ id }) => {
 
     try {
       if (checkErrors()) {
-        const token = window.localStorage.getItem('token')
         const requestBody = {
           name: name,
           released_date: releaseDate,
