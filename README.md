@@ -20,7 +20,7 @@ yarn start
 ## Built with
 
 - Gatsby
-- React & GraphQL
+- React
 - VSCode
 - And these useful of JavaScript libraries & Gatsby plugins [package.json](package.json)
 
