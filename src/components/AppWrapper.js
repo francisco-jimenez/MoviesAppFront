@@ -18,7 +18,6 @@ export default ({ children }) => {
           url: `${process.env.API}/users/authenticate`,
           headers: {
             'Content-Type': 'application/json',
-            'x-access-token': token,
           },
         })
 

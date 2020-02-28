@@ -66,12 +66,6 @@ export default ({ id }) => {
   const fetchMovie = async () => {
     if (movieId) {
       try {
-        const token = window.localStorage.getItem('token')
-        const config = {
-          headers: {
-            'x-access-token': token,
-          }
-        }
         const { data } = await axios.get(
           `${process.env.API}/movies/${movieId}`,
           config
@@ -119,12 +113,6 @@ export default ({ id }) => {
 
   const deleteMovie = async () => {
     try {
-      const token = window.localStorage.getItem('token')
-      const config = {
-        headers: {
-          'x-access-token': token,
-        }
-      }
       setSubmitting(true)
       await axios.delete(`${process.env.API}/movies/${movieId}`,config)
       navigate('/app/movies/')
@@ -148,7 +136,6 @@ export default ({ id }) => {
       const config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'x-access-token': token,
         }
       }
       setSubmitting(true)
@@ -182,7 +169,6 @@ export default ({ id }) => {
         const config = {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'x-access-token': token,
           }
         }
         const { data } = await axios.post(

@@ -12,11 +12,7 @@ export default () => {
   const fetchMovies = async () => {
     try {
       const token = window.localStorage.getItem('token')
-      const config = {
-        headers: {
-          'x-access-token': token,
-        }
-      }
+
       const { data } = await axios.get(
         `${process.env.API}/movies`,
          config
@@ -36,7 +32,9 @@ export default () => {
   return (
     <>
       <div className="container">
-        <h4>Hi, {user.data.name}</h4>
+        {user &&
+          <h4>Hi, {user.data.name}</h4>
+        }
         <h2>Movies list</h2>
         {loading ? (
           <MoviesLoading />
