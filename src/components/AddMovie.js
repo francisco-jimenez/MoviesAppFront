@@ -67,8 +67,7 @@ export default ({ id }) => {
     if (movieId) {
       try {
         const { data } = await axios.get(
-          `${process.env.API}/movies/${movieId}`,
-          config
+          `${process.env.API}/movies/${movieId}`
         )
         let fetchMovie = data.data.movies
         console.log(fetchMovie)
