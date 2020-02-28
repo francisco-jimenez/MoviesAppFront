@@ -1,16 +1,16 @@
 import { navigate } from 'gatsby'
 
-export default (tasks, action) => {
+export default (movies, action) => {
   switch (action.type) {
-    case 'Add_NEW_TASK':
-      return [...tasks, action.payload]
-    case 'FETCH_TASKS':
+    case 'Add_NEW_MOVIE':
+      return [...movies, action.payload]
+    case 'FETCH_MOVIES':
       return action.payload
     case 'GET_DATA_BY_ID':
       return action.payload
-    case 'TOGGLE_TASK':
+    case 'TOGGLE_MOVIE':
       navigate('/app/')
-      return tasks.map(item =>
+      return movies.map(item =>
         item.id === action.id
           ? {
               ...item,
@@ -19,6 +19,6 @@ export default (tasks, action) => {
           : item
       )
     default:
-      return tasks
+      return movies
   }
 }

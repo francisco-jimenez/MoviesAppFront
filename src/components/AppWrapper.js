@@ -15,7 +15,7 @@ export default ({ children }) => {
       if (token) {
         const { data } = await axios({
           method: 'GET',
-          url: `${process.env.API}/authenticate`,
+          url: `${process.env.API}/users/authenticate`,
           headers: {
             'Content-Type': 'application/json',
             'x-access-token': token,
@@ -34,17 +34,17 @@ export default ({ children }) => {
           window.location.pathname === '/app/register/' ||
           window.location.pathname === '/app/'
         ) {
-          navigate('/app/tasks/')
+          navigate('/app/movies/')
         }
         setLoading(false)
       } else {
         if (
-          window.location.pathname === '/app/tasks' ||
-          window.location.pathname === '/app/tasks/' ||
-          window.location.pathname === '/app/task' ||
-          window.location.pathname === '/app/task/' ||
-          window.location.pathname === '/app/task/new/' ||
-          window.location.pathname === '/app/task/new'
+          window.location.pathname === '/app/movies' ||
+          window.location.pathname === '/app/movies/' ||
+          window.location.pathname === '/app/movie' ||
+          window.location.pathname === '/app/movie/' ||
+          window.location.pathname === '/app/movie/new/' ||
+          window.location.pathname === '/app/movie/new'
         ) {
           navigate('/app/login/')
         }
@@ -74,7 +74,7 @@ export default ({ children }) => {
       {loading ? (
         <span>Loading...</span>
       ) : (
-        <Layout isLoggedIn={user.isLoggedIn} logout={logout}>
+        <Layout logout={logout}>
           {children}
         </Layout>
       )}

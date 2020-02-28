@@ -17,7 +17,7 @@ export default () => {
         }
       }
       const { data } = await axios.get(
-        `${process.env.API}movies`,
+        `${process.env.API}/movies`,
          config
        )
 

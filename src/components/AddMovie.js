@@ -30,7 +30,7 @@ export default ({ id }) => {
   const [plotDescriptionError, setPlotDescriptionError] = useState(false)
 
   useEffect(() => {
-    fetchTask()
+    fetchMovie()
   }, [])
 
   const handleChange = e => {
@@ -63,7 +63,7 @@ export default ({ id }) => {
     setEditing(true)
   }
 
-  const fetchTask = async () => {
+  const fetchMovie = async () => {
     if (movieId) {
       try {
         const token = window.localStorage.getItem('token')
@@ -117,7 +117,7 @@ export default ({ id }) => {
     return cleanOfError
   }
 
-  const deleteTask = async () => {
+  const deleteMovie = async () => {
     try {
       const token = window.localStorage.getItem('token')
       const config = {
@@ -127,7 +127,7 @@ export default ({ id }) => {
       }
       setSubmitting(true)
       await axios.delete(`${process.env.API}/movies/${movieId}`,config)
-      navigate('/app/tasks/')
+      navigate('/app/movies/')
       setSubmitting(false)
     } catch (error) {
       alert('something went wrong')
@@ -157,7 +157,7 @@ export default ({ id }) => {
         qs.stringify(requestBody),
         config
       )
-      navigate('/app/tasks/')
+      navigate('/app/movies/')
       setSubmitting(false)
     } catch (error) {
       alert('something went wrong')
@@ -191,8 +191,8 @@ export default ({ id }) => {
           config
         )
 
-        dispatch({ type: 'Add_NEW_TASK', payload: data })
-        navigate('/app/tasks/')
+        dispatch({ type: 'Add_NEW_MOVIE', payload: data })
+        navigate('/app/movies/')
         setSubmitting(false)
       }
     } catch (err) {
@@ -205,7 +205,7 @@ export default ({ id }) => {
       <div className="container">
         <button
               className="btn btn-rounded gradient-green"
-                onClick={() => navigate('/app/tasks/')}
+                onClick={() => navigate('/app/movies/')}
               >
                 Back
         </button>
@@ -284,7 +284,7 @@ export default ({ id }) => {
               <button 
                 type="button" 
                 disabled={isSubmitting} 
-                onClick={deleteTask}
+                onClick={deleteMovie}
               >
                 Delete
               </button>

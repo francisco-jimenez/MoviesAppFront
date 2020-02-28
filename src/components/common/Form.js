@@ -65,7 +65,7 @@ export default ({ form }) => {
             await setAuthToken(data.data.token)
             dispatchUserAction({ type: 'SAVE_USER', payload: data.data.user })
             window.localStorage.setItem('token', data.data.token)
-            navigate('/app/tasks/')
+            navigate('/app/movies/')
           } else {
             setErrors({
               ...errors,
